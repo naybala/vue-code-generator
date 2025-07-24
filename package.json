@@ -1,6 +1,6 @@
 {
   "name": "vue-code-generator",
-  "version": "1.0.0",
+  "version": "1.0.2",
   "type": "module",
   "bin": {
     "make-core-ui-feature": "./index.js"

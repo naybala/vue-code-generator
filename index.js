@@ -62,13 +62,38 @@ async function main() {
     "composables",
     pluralName
   );
-  const viewsDir = path.join(projectRoot, "views", pluralName);
+  const viewsDir = path.join(projectRoot, "src", "views", pluralName);
   const templatesDir = path.join(__dirname, "templates");
 
+  // Check if feature already exists
+  const alreadyExists =
+    (await fs.pathExists(composablesDir)) || (await fs.pathExists(viewsDir));
+
+  if (alreadyExists) {
+    const { overwrite } = await inquirer.prompt([
+      {
+        type: "confirm",
+        name: "overwrite",
+        message: `The feature "${pascalName}" already exists. Do you want to overwrite it?`,
+        default: false,
+      },
+    ]);
+
+    if (!overwrite) {
+      console.log("Generation code cancelled.");
+      return;
+    }
+
+    // Optionally delete existing folders
+    await fs.remove(composablesDir);
+    await fs.remove(viewsDir);
+  }
+
+  // Recreate folders
   await fs.ensureDir(composablesDir);
   await fs.ensureDir(viewsDir);
 
-  // Composables
+  // Generate Composables
   await generateFromTemplate(
     path.join(templatesDir, "composables", "useForm.ts"),
     path.join(composablesDir, `use${pascalName}Form.ts`),
@@ -87,7 +112,7 @@ async function main() {
     replacements
   );
 
-  // Views
+  // Generate Views
   await generateFromTemplate(
     path.join(templatesDir, "views", "FormView.vue"),
     path.join(viewsDir, `${pascalName}FormView.vue`),
