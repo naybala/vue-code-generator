@@ -74,7 +74,7 @@ export function use__PascalName__Form() {
   };
 
   const cancel = () => {
-    router.push({ name: "__routeName__" });
+    router.push({ name: "__plural__" });
   };
 
   return {
