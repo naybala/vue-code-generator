@@ -45,7 +45,7 @@ async function main() {
     {
       type: "input",
       name: "name",
-      message: "Name of the feature to generate:",
+      message: "Name of the feature to generate (e.g. User):",
     },
   ]);
 
