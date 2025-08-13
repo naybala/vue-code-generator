@@ -98,6 +98,9 @@ const tableActions = [
           <div
             class="mt-4 flex flex-col sm:flex-row justify-center items-center gap-4 pb-2"
           >
+            <p class="text-sm text-gray-500 mb-2 ms-0 md:ms-2 text-start">
+              Total - {{ total }} items
+            </p>
             <Paginator
               :rows="limit"
               :first="first"
