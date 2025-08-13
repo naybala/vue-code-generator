@@ -19,6 +19,7 @@ const {
   fetchData,
   openNewForm,
   editItem,
+  viewItem,
   confirmDeleteItem,
 } = use__PascalName__Table();
 
@@ -31,13 +32,13 @@ onMounted(() => fetchData());
 
 const permissionStore = usePermissionStore();
 const createPermission = computed(() =>
-  permissionStore.hasPermission("create __plural__")
+  permissionStore.hasPermission("__plural__.store")
 );
 const editPermission = computed(() =>
-  permissionStore.hasPermission("edit __plural__")
+  permissionStore.hasPermission("__plural__.update")
 );
 const deletePermission = computed(() =>
-  permissionStore.hasPermission("delete __plural__")
+  permissionStore.hasPermission("__plural__.destroy")
 );
 
 const tableColumns = [
@@ -46,6 +47,12 @@ const tableColumns = [
 ];
 
 const tableActions = [
+  {
+    icon: "pi pi-eye",
+    permission: editPermission.value,
+    handler: (item: any) => viewItem(item),
+    class: "p-button-text p-button-warning mr-2",
+  },
   {
     icon: "pi pi-pencil",
     permission: editPermission.value,

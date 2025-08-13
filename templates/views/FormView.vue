@@ -9,6 +9,7 @@ import { useServerError } from "@/composables/common/useServerError";
 
 const {
   t,
+  isShowMode,
   isEditMode,
   form,
   save,
@@ -16,7 +17,6 @@ const {
   cancel,
   error,
   saving,
-  permissions,
 } = use__PascalName__Form();
 
 useServerError(error);
@@ -26,7 +26,13 @@ useServerError(error);
   <div class="p-6">
     <Toast />
     <h1 class="text-3xl font-bold mb-6">
-      {{ isEditMode ? t("__plural__.edit") : t("__plural__.add") }}
+      {{
+        isShowMode
+          ? t("__plural__.view")
+          : isEditMode
+          ? t("__plural__.edit")
+          : t("__plural__.add")
+      }}
     </h1>
 
     <Card class="dark:bg-gray-800 dark:text-gray-100 shadow-md">
@@ -36,11 +42,13 @@ useServerError(error);
             v-model="form.name"
             :label="t('__plural__.name')"
             :error="validationErrors.name"
+            :readonly="isShowMode"
           />
 
           <Description
             v-model="form.description"
             :label="t('__plural__.description')"
+            :readonly="isShowMode"
           />
 
           <FormActions
@@ -48,6 +56,7 @@ useServerError(error);
             :saveLabel="t('common.save')"
             :cancelLabel="t('common.cancel')"
             :loading="saving"
+            :readonly="isShowMode"
           />
         </form>
       </template>

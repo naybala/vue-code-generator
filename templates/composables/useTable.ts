@@ -11,7 +11,7 @@ export function use__PascalName__Table() {
   const router = useRouter();
   const { t } = useI18n();
   const confirm = useConfirm();
-  const { showSuccess, showInfo } = useAppToast();
+  const { showSuccess, showInfo,showError } = useAppToast();
 
   const searchTerm = ref("");
 
@@ -65,6 +65,10 @@ export function use__PascalName__Table() {
     router.push({ name: "__routeName__-edit", params: { id: item.id } });
   };
 
+  const viewItem = (role: any) => {
+    router.push({ name: "__routeName__-view", params: { id: role.id } });
+  };
+
   const confirmDeleteItem = (event: Event, item: __PascalName__) => {
     confirm.require({
       target: event.currentTarget as HTMLElement,
@@ -78,6 +82,7 @@ export function use__PascalName__Table() {
             showSuccess(t("common.success"), t("__plural__.deleted"));
             await fetchData(page.value, limit.value);
           } catch (e) {
+            showError(error.value || 'Something went wrong');
             console.error("Delete error:", e);
           }
         }
@@ -99,6 +104,7 @@ export function use__PascalName__Table() {
     total,
     fetchData,
     openNewForm,
+    viewItem,
     editItem,
     confirmDeleteItem,
   };
