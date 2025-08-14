@@ -37,7 +37,10 @@ useServerError(error);
 
     <Card class="dark:bg-gray-800 dark:text-gray-100 shadow-md">
       <template #content>
-        <form @submit.prevent="save">
+        <span v-if="loading" class="">
+          <Loader />
+        </span>
+        <form @submit.prevent="save" v-else>
           <NameField
             v-model="form.name"
             :label="t('__plural__.name')"

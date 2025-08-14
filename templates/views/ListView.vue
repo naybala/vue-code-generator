@@ -35,10 +35,10 @@ const createPermission = computed(() =>
   permissionStore.hasPermission("__plural__.store")
 );
 const editPermission = computed(() =>
-  permissionStore.hasPermission("__plural__.update")
+  permissionStore.hasPermission("__plural__.edit")
 );
 const deletePermission = computed(() =>
-  permissionStore.hasPermission("__plural__.destroy")
+  permissionStore.hasPermission("__plural__.delete")
 );
 
 const tableColumns = [
