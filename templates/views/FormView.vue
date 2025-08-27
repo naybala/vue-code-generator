@@ -6,6 +6,7 @@ import NameField from "@components/common/NameField.vue";
 import Description from "@components/common/Description.vue";
 import FormActions from "@components/common/FormActions.vue";
 import { useServerError } from "@/composables/common/useServerError";
+import Loader from "@/components/common/Loader.vue";
 
 const {
   t,
@@ -13,6 +14,7 @@ const {
   isEditMode,
   form,
   save,
+  loading,
   validationErrors,
   cancel,
   error,
@@ -42,6 +44,7 @@ useServerError(error);
         </span>
         <form @submit.prevent="save" v-else>
           <NameField
+            id="name"
             v-model="form.name"
             :label="t('__plural__.name')"
             :error="validationErrors.name"
