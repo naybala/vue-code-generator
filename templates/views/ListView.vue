@@ -37,6 +37,9 @@ const createPermission = computed(() =>
 const editPermission = computed(() =>
   permissionStore.hasPermission("__plural__.edit")
 );
+const showPermission = computed(() =>
+  permissionStore.hasPermission("__plural__.show")
+);
 const deletePermission = computed(() =>
   permissionStore.hasPermission("__plural__.delete")
 );
@@ -49,21 +52,24 @@ const tableColumns = [
 const tableActions = [
   {
     icon: "pi pi-eye",
-    permission: editPermission.value,
+    permission: showPermission.value,
     handler: (item: any) => viewItem(item),
     class: "p-button-text p-button-warning mr-2",
+    tooltip: "View Item",
   },
   {
     icon: "pi pi-pencil",
     permission: editPermission.value,
     handler: (item: any) => editItem(item),
     class: "p-button-text p-button-warning mr-2",
+    tooltip: "Edit Item",
   },
   {
     icon: "pi pi-trash",
     permission: deletePermission.value,
     handler: (item: any, event: Event) => confirmDeleteItem(event, item),
     class: "p-button-text p-button-danger",
+    tooltip: "Delete Item",
   },
 ];
 </script>
@@ -72,11 +78,7 @@ const tableActions = [
   <div class="p-0 md:p-6">
     <h1 class="text-3xl font-bold mb-6">{{ t("__plural__.__plural__") }}</h1>
 
-    <div v-if="loading" class="text-center text-gray-500">
-      <Loader />
-    </div>
-
-    <div v-else>
+    <div>
       <div class="flex justify-between items-center mb-4 flex-wrap">
         <InputText
           v-model="searchTerm"
@@ -93,30 +95,35 @@ const tableActions = [
       </div>
 
       <div>
-        <div v-if="items.length === 0" class="text-gray-300">
-          No Data Found...
+        <div v-if="loading" class="text-center text-gray-500">
+          <Loader />
         </div>
-        <div v-else class="shadow-md">
-          <BaseTable
-            :columns="tableColumns"
-            :items="items"
-            :actions="tableActions"
-          />
-          <div
-            class="mt-4 flex flex-col sm:flex-row justify-center items-center gap-4 pb-2"
-          >
-            <p class="text-sm text-gray-500 mb-2 ms-0 md:ms-2 text-start">
-              Total - {{ total }} items
-            </p>
-            <Paginator
-              :rows="limit"
-              :first="first"
-              :totalRecords="total"
-              :page="page - 1"
-              :rowsPerPageOptions="[10, 20, 50]"
-              @page="onPageChange"
-              class="w-full sm:w-auto"
+        <div v-else>
+          <div v-if="items.length === 0" class="text-gray-300">
+            No Data Found...
+          </div>
+          <div v-else class="shadow-md">
+            <BaseTable
+              :columns="tableColumns"
+              :items="items"
+              :actions="tableActions"
             />
+            <div
+              class="mt-4 flex flex-col sm:flex-row justify-center items-center gap-4 pb-2"
+            >
+              <p class="text-sm text-gray-500 mb-2 ms-0 md:ms-2 text-start">
+                Total - {{ total }} items
+              </p>
+              <Paginator
+                :rows="limit"
+                :first="first"
+                :totalRecords="total"
+                :page="page - 1"
+                :rowsPerPageOptions="[10, 20, 50, 100, 500]"
+                @page="onPageChange"
+                class="w-full sm:w-auto"
+              />
+            </div>
           </div>
         </div>
       </div>

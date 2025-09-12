@@ -1,21 +1,24 @@
-import { ref, onMounted, watch, Ref } from "vue";
+import { ref, onMounted, watch, Ref, reactive } from "vue";
 import { useRouter, useRoute } from "vue-router";
 import { useI18n } from "vue-i18n";
 import { useCrud } from "../common/useCrud";
 import type { __PascalName__ } from "../../types";
 import { useAppToast } from "../common/useAppToast";
 import { validate__PascalName__Form } from "./validate__PascalName__Form";
+import { __PascalName___CREATE_API_PATHS } from "./apiPaths";
 
 export function use__PascalName__Form() {
   const router = useRouter();
   const route = useRoute();
   const { t } = useI18n();
   const { showSuccess, showError } = useAppToast();
-  const saving:Ref<boolean> = ref(false);
 
-  const itemId = route.params.id ? Number(route.params.id) : null;
-  const isEditMode = ref(route.name === "__routeName__-edit");
-  const isShowMode = ref(route.name === "__routeName__-view"); 
+  const state = reactive({
+    saving: false,
+    isEditMode: route.name === "__routeName__-edit",
+    isShowMode: route.name === "__routeName__-view",
+    validationErrors: {} as Record<string, string>,
+  });
 
   const {
     selectedItem: item,
@@ -24,7 +27,7 @@ export function use__PascalName__Form() {
     fetchOne,
     createItem,
     updateItem,
-  } = useCrud<__PascalName__>({ apiPath: "api/web/__plural__" });
+  } = useCrud<any>({ apiPath: __PascalName___CREATE_API_PATHS.__plural__ });
 
   const form = ref<__PascalName__>({
     name: "",
@@ -32,17 +35,25 @@ export function use__PascalName__Form() {
     // other fields
   });
 
-  const validationErrors = ref<Record<string, string>>({});
-
   onMounted(async () => {
-    if ((isEditMode.value || isShowMode.value) && itemId) {
-      await fetchOne(itemId);
-      if (item.value) {
-        form.value = { ...item.value };
+    try {
+      if (
+        (state.isEditMode.value || state.isShowMode.value) &&
+        route.params.id
+      ) {
+        await fetchOne(route.params.id as string);
+        if (item.value) {
+          form.value = { ...item.value };
+        }
+        setTimeout(() => {
+          loading.value = false;
+        }, 300);
       }
-      setTimeout(() => {
-        loading.value = false;          
-      }, 300);  
+    } catch (err: any) {
+      showError(
+        t("common.error"),
+        err.message || "An unexpected error occurred"
+      );
     }
   });
 
@@ -53,30 +64,33 @@ export function use__PascalName__Form() {
   });
 
   const save = async () => {
-    if (isShowMode.value) return;  
+    if (state.isShowMode) return;
 
-    validationErrors.value = validate__PascalName__Form(form.value, t);
+    state.validationErrors = validate__PascalName__Form(form.value, t);
 
-    if (Object.keys(validationErrors.value).length > 0) {
+    if (Object.keys(state.validationErrors).length > 0) {
       showError(t("common.error"), t("common.validationError"));
       return;
     }
 
-    saving.value = true;
+    state.saving = true;
     try {
-      if (isEditMode.value && itemId) {
-        await updateItem(form.value);
+      if (state.isEditMode && route.params.id) {
+        await updateItem(form);
         showSuccess(t("common.success"), t("__plural__.updated"));
       } else {
-        await createItem(form.value);
+        await createItem(form);
         showSuccess(t("common.success"), t("__plural__.created"));
       }
       router.push({ name: "__plural__" });
     } catch (err: any) {
       console.error("Save failed:", err);
-      showError(t("common.error"), err.message || "An unexpected error occurred");
+      showError(
+        t("common.error"),
+        err.message || "An unexpected error occurred"
+      );
     } finally {
-      saving.value = false;
+      state.saving = false;
     }
   };
 
@@ -86,13 +100,11 @@ export function use__PascalName__Form() {
 
   return {
     t,
-    isEditMode,
+    state,
     form,
-    validationErrors,
     save,
     cancel,
     loading,
     error,
-    saving,
   };
 }

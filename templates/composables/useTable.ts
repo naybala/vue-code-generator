@@ -4,14 +4,15 @@ import { useI18n } from "vue-i18n";
 import { useConfirm } from "primevue/useconfirm";
 import { useCrud } from "../common/useCrud";
 import { useAppToast } from "../common/useAppToast";
-import type { __PascalName__Index } from "@customTypes/index";
-import type { __PascalName__ } from "@customTypes/index";
+import type { __PascalName__Index, __PascalName__ } from "@customTypes/index";
+import { __PascalName___INDEX_API_PATHS } from "./apiPaths";
+import { useDebouncedFn } from "../common/useDebouncedFn";
 
 export function use__PascalName__Table() {
   const router = useRouter();
   const { t } = useI18n();
   const confirm = useConfirm();
-  const { showSuccess, showInfo,showError } = useAppToast();
+  const { showSuccess, showInfo, showError } = useAppToast();
 
   const searchTerm = ref("");
 
@@ -25,36 +26,52 @@ export function use__PascalName__Table() {
     fetchAll,
     deleteItem,
   } = useCrud<__PascalName__Index>({
-    apiPath: "api/web/__plural__",
+    apiPath: "__PascalName___INDEX_API_PATHS.__plural__",
   });
 
-  let debounceTimer: ReturnType<typeof setTimeout>;
+  const fetchAllWithParams = async (params: any) => {
+    try {
+      await fetchAll(params);
+    } catch (e) {
+      console.error("Fetch error:", e);
+    }
+  };
+  const debouncedFetch = useDebouncedFn(fetchAllWithParams, 300, loading);
 
   const fetchData = async (newPage?: number, newLimit?: number) => {
-    clearTimeout(debounceTimer);
-
-    return new Promise<void>((resolve) => {
-      debounceTimer = setTimeout(async () => {
-        try {
-          await fetchAll({
-            page: newPage || page.value,
-            limit: newLimit || limit.value,
-            search: searchTerm.value,
-          });
-          resolve();
-        } catch (e) {
-          console.error("Fetch error:", e);
-        }
-      }, 300);
-    });
+    loading.value = true;
+    try {
+      await fetchAll({
+        page: newPage ?? page.value,
+        limit: newLimit ?? limit.value,
+        search: searchTerm,
+      });
+    } catch (e) {
+      console.error("Fetch error:", e);
+    } finally {
+      loading.value = false;
+    }
   };
 
   onMounted(async () => {
     await fetchData();
+    console.log(
+      "Initial data loaded. Page:",
+      page.value,
+      "Limit:",
+      limit.value,
+      "Total:",
+      total.value
+    );
   });
 
-  watch(searchTerm, () => {
-    fetchData(1);
+  //  Watch searchTerm for filtering
+  watch(searchTerm, (newTerm) => {
+    debouncedFetch({
+      page: 1,
+      limit: limit.value,
+      search: newTerm,
+    });
   });
 
   const openNewForm = () => {
@@ -82,7 +99,7 @@ export function use__PascalName__Table() {
             showSuccess(t("common.success"), t("__plural__.deleted"));
             await fetchData(page.value, limit.value);
           } catch (e) {
-            showError(error.value || 'Something went wrong');
+            showError(error.value || "Something went wrong");
             console.error("Delete error:", e);
           }
         }
@@ -95,10 +112,10 @@ export function use__PascalName__Table() {
 
   return {
     t,
+    searchTerm,
     items,
     loading,
     error,
-    searchTerm,
     page,
     limit,
     total,

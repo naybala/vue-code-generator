@@ -94,6 +94,13 @@ async function main() {
   await fs.ensureDir(viewsDir);
 
   // Generate Composables
+
+  await generateFromTemplate(
+    path.join(templatesDir, "composables", "apiPath.ts"),
+    path.join(composablesDir, `apiPaths.ts`),
+    replacements
+  );
+
   await generateFromTemplate(
     path.join(templatesDir, "composables", "useForm.ts"),
     path.join(composablesDir, `use${pascalName}Form.ts`),

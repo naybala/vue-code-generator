@@ -7,19 +7,10 @@ import Description from "@components/common/Description.vue";
 import FormActions from "@components/common/FormActions.vue";
 import { useServerError } from "@/composables/common/useServerError";
 import Loader from "@/components/common/Loader.vue";
+import { watch } from "vue";
 
-const {
-  t,
-  isShowMode,
-  isEditMode,
-  form,
-  save,
-  loading,
-  validationErrors,
-  cancel,
-  error,
-  saving,
-} = use__PascalName__Form();
+const { t, state, form, save, loading, cancel, error } =
+  use__PascalName__Form();
 
 useServerError(error);
 </script>
@@ -29,9 +20,9 @@ useServerError(error);
     <Toast />
     <h1 class="text-3xl font-bold mb-6">
       {{
-        isShowMode
+        state.isShowMode
           ? t("__plural__.view")
-          : isEditMode
+          : state.isEditMode
           ? t("__plural__.edit")
           : t("__plural__.add")
       }}
@@ -47,22 +38,22 @@ useServerError(error);
             id="name"
             v-model="form.name"
             :label="t('__plural__.name')"
-            :error="validationErrors.name"
-            :readonly="isShowMode"
+            :error="state.validationErrors.name"
+            :readonly="state.isShowMode"
           />
 
           <Description
             v-model="form.description"
             :label="t('__plural__.description')"
-            :readonly="isShowMode"
+            :readonly="state.isShowMode"
           />
 
           <FormActions
             :onCancel="cancel"
             :saveLabel="t('common.save')"
             :cancelLabel="t('common.cancel')"
-            :loading="saving"
-            :readonly="isShowMode"
+            :loading="state.saving"
+            :readonly="state.isShowMode"
           />
         </form>
       </template>
