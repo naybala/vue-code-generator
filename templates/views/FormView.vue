@@ -20,10 +20,10 @@ useServerError(error);
     <h1 class="text-3xl font-bold mb-6">
       {{
         state.isShowMode
-          ? t("__plural__.view")
+          ? t("__localizedName__.view")
           : state.isEditMode
-          ? t("__plural__.edit")
-          : t("__plural__.add")
+          ? t("__localizedName__.edit")
+          : t("__localizedName__.add")
       }}
     </h1>
 
@@ -36,14 +36,14 @@ useServerError(error);
           <NameField
             id="name"
             v-model="form.name"
-            :label="t('__plural__.name')"
+            :label="t('__localizedName__.name')"
             :error="state.validationErrors.name"
             :readonly="state.isShowMode"
           />
 
           <Description
             v-model="form.description"
-            :label="t('__plural__.description')"
+            :label="t('__localizedName__.description')"
             :readonly="state.isShowMode"
           />
 

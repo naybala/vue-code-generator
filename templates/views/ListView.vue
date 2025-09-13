@@ -76,7 +76,7 @@ const tableActions = [
 
 <template>
   <div class="p-0 md:p-6">
-    <h1 class="text-3xl font-bold mb-6">{{ t("__plural__.__plural__") }}</h1>
+    <h1 class="text-3xl font-bold mb-6">{{ t("__localizedName__.title") }}</h1>
 
     <div>
       <div class="flex justify-between items-center mb-4 flex-wrap">
