@@ -27,7 +27,7 @@ export function use__PascalName__Form() {
     fetchOne,
     createItem,
     updateItem,
-  } = useCrud<any>({ apiPath: __PascalName___CREATE_API_PATHS.__pascalName__ });
+  } = useCrud<any>({ apiPath: __PascalName___CREATE_API_PATHS.__PascalName__ });
 
   const form = ref<__PascalName__>({
     name: "",
@@ -37,10 +37,7 @@ export function use__PascalName__Form() {
 
   onMounted(async () => {
     try {
-      if (
-        (state.isEditMode.value || state.isShowMode.value) &&
-        route.params.id
-      ) {
+      if ((state.isEditMode || state.isShowMode) && route.params.id) {
         await fetchOne(route.params.id as string);
         if (item.value) {
           form.value = { ...item.value };

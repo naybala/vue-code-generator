@@ -1,5 +1,5 @@
 import __PascalName__ListView from "@views/__localizedName__/__PascalName__ListView.vue";
-import __PascalName__FormView from `@views/__localizedName__/__PascalName__FormView.vue`;
+import __PascalName__FormView from "@views/__localizedName__/__PascalName__FormView.vue";
 
 export const __camelName__Routes = [
   {

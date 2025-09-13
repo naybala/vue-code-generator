@@ -4,7 +4,7 @@ import InputText from "primevue/inputtext";
 import Button from "primevue/button";
 import Paginator from "primevue/paginator";
 import BaseTable from "@/components/common/BaseTable.vue";
-import { use__PascalName__Table } from "@composables/__plural__/use__PascalName__Table";
+import { use__PascalName__Table } from "@composables/__routeName__/use__PascalName__Table";
 import { usePermissionStore } from "@/stores/permission";
 import Loader from "@/components/common/Loader.vue";
 import { useI18n } from "vue-i18n";
