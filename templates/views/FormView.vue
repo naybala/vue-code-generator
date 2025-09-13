@@ -7,7 +7,6 @@ import Description from "@components/common/Description.vue";
 import FormActions from "@components/common/FormActions.vue";
 import { useServerError } from "@/composables/common/useServerError";
 import Loader from "@/components/common/Loader.vue";
-import { watch } from "vue";
 
 const { t, state, form, save, loading, cancel, error } =
   use__PascalName__Form();

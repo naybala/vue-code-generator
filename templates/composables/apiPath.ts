@@ -1,7 +1,7 @@
 export const __PascalName___CREATE_API_PATHS = {
-  __plural__: "api/web/__plural__",
+  __PascalName__: `api/web/${__kebabName__}`,
 };
 
 export const __PascalName___INDEX_API_PATHS = {
-  __plural__: "api/web/__plural__",
+  __kebabName__: `api/web/${__kebabName__}`,
 };

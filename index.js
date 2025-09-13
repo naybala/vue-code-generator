@@ -3,6 +3,7 @@ import fs from "fs-extra";
 import path from "path";
 import inquirer from "inquirer";
 import { fileURLToPath } from "url";
+import pluralize from "pluralize";
 
 const __filename = fileURLToPath(import.meta.url);
 const __dirname = path.dirname(__filename);
@@ -16,10 +17,11 @@ function lowerFirst(str) {
   return str.charAt(0).toLowerCase() + str.slice(1);
 }
 
-function pluralize(name) {
-  return name.toLowerCase().endsWith("s")
-    ? name.toLowerCase()
-    : name.toLowerCase() + "s";
+function toKebabCase(str) {
+  return str
+    .replace(/([a-z0-9])([A-Z])/g, "$1-$2")
+    .replace(/([A-Z])([A-Z][a-z])/g, "$1-$2")
+    .toLowerCase();
 }
 
 function processTemplate(content, replacements) {
@@ -27,7 +29,9 @@ function processTemplate(content, replacements) {
     .replace(/__PascalName__/g, replacements.pascalName)
     .replace(/__camelName__/g, replacements.camelName)
     .replace(/__plural__/g, replacements.pluralName)
-    .replace(/__routeName__/g, replacements.routeName);
+    .replace(/__routeName__/g, replacements.routeName)
+    .replace(/__kebabName__/g, replacements.kebabName)
+    .replace(/__localizedName__/g, replacements.localizedName);
 }
 
 async function generateFromTemplate(
@@ -53,17 +57,35 @@ async function main() {
   const camelName = lowerFirst(name);
   const pluralName = pluralize(name);
   const routeName = camelName;
+  const kebabName = toKebabCase(pluralName);
+  const localizedName = pluralize(camelName);
 
-  const replacements = { pascalName, camelName, pluralName, routeName };
+  console.log(`Pascal name: "${pascalName}"`);
+  console.log(`Camel name: "${camelName}"`);
+  console.log(`Plural name: "${pluralName}"`);
+  console.log(`Route name: "${routeName}"`);
+  console.log(`Kebab name: "${kebabName}"`);
+  console.log(`Localized name: "${localizedName}"`);
+
+  const replacements = {
+    pascalName,
+    camelName,
+    pluralName,
+    routeName,
+    kebabName,
+    localizedName,
+  };
 
   const composablesDir = path.join(
     projectRoot,
     "src",
     "composables",
-    pluralName
+    localizedName
   );
-  const viewsDir = path.join(projectRoot, "src", "views", pluralName);
+  const viewsDir = path.join(projectRoot, "src", "views", localizedName);
   const templatesDir = path.join(__dirname, "templates");
+  const routesDir = path.join(projectRoot, "src", "router");
+  const localeDir = path.join(projectRoot, "src", "locales");
 
   // Check if feature already exists
   const alreadyExists =
@@ -94,7 +116,6 @@ async function main() {
   await fs.ensureDir(viewsDir);
 
   // Generate Composables
-
   await generateFromTemplate(
     path.join(templatesDir, "composables", "apiPath.ts"),
     path.join(composablesDir, `apiPaths.ts`),
@@ -129,6 +150,26 @@ async function main() {
   await generateFromTemplate(
     path.join(templatesDir, "views", "ListView.vue"),
     path.join(viewsDir, `${pascalName}ListView.vue`),
+    replacements
+  );
+
+  // Generate Routes
+  await generateFromTemplate(
+    path.join(templatesDir, "routes", "route.js"),
+    path.join(routesDir, `${routeName}Routes.ts`),
+    replacements
+  );
+
+  // Generate Locales
+  await generateFromTemplate(
+    path.join(templatesDir, "locale", "mm.js"),
+    path.join(localeDir, `mm/${localizedName}.js`),
+    replacements
+  );
+
+  await generateFromTemplate(
+    path.join(templatesDir, "locale", "en.js"),
+    path.join(localeDir, `en/${localizedName}.js`),
     replacements
   );
 

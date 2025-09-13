@@ -25,8 +25,8 @@ export function use__PascalName__Table() {
     total,
     fetchAll,
     deleteItem,
-  } = useCrud<__PascalName__Index>({
-    apiPath: "__PascalName___INDEX_API_PATHS.__plural__",
+  } = useCrud<any>({
+    apiPath: "__PascalName___INDEX_API_PATHS.__PascalName__",
   });
 
   const fetchAllWithParams = async (params: any) => {
@@ -44,7 +44,7 @@ export function use__PascalName__Table() {
       await fetchAll({
         page: newPage ?? page.value,
         limit: newLimit ?? limit.value,
-        search: searchTerm,
+        search: searchTerm.value,
       });
     } catch (e) {
       console.error("Fetch error:", e);

@@ -1,4 +1,4 @@
-import { ref, onMounted, watch, Ref, reactive } from "vue";
+import { ref, onMounted, watch, reactive } from "vue";
 import { useRouter, useRoute } from "vue-router";
 import { useI18n } from "vue-i18n";
 import { useCrud } from "../common/useCrud";
@@ -27,7 +27,7 @@ export function use__PascalName__Form() {
     fetchOne,
     createItem,
     updateItem,
-  } = useCrud<any>({ apiPath: __PascalName___CREATE_API_PATHS.__plural__ });
+  } = useCrud<any>({ apiPath: __PascalName___CREATE_API_PATHS.__pascalName__ });
 
   const form = ref<__PascalName__>({
     name: "",
@@ -45,9 +45,6 @@ export function use__PascalName__Form() {
         if (item.value) {
           form.value = { ...item.value };
         }
-        setTimeout(() => {
-          loading.value = false;
-        }, 300);
       }
     } catch (err: any) {
       showError(
@@ -55,6 +52,9 @@ export function use__PascalName__Form() {
         err.message || "An unexpected error occurred"
       );
     }
+    setTimeout(() => {
+      loading.value = false;
+    }, 300);
   });
 
   watch(item, (newVal) => {
@@ -76,13 +76,13 @@ export function use__PascalName__Form() {
     state.saving = true;
     try {
       if (state.isEditMode && route.params.id) {
-        await updateItem(form);
-        showSuccess(t("common.success"), t("__plural__.updated"));
+        await updateItem(form.value);
+        showSuccess(t("common.success"), t("__camelName__.updated"));
       } else {
-        await createItem(form);
-        showSuccess(t("common.success"), t("__plural__.created"));
+        await createItem(form.value);
+        showSuccess(t("common.success"), t("__camelName__.created"));
       }
-      router.push({ name: "__plural__" });
+      router.push({ name: "__routeName__" });
     } catch (err: any) {
       console.error("Save failed:", err);
       showError(
@@ -95,7 +95,7 @@ export function use__PascalName__Form() {
   };
 
   const cancel = () => {
-    router.push({ name: "__plural__" });
+    router.push({ name: "__routeName__" });
   };
 
   return {

@@ -32,16 +32,16 @@ onMounted(() => fetchData());
 
 const permissionStore = usePermissionStore();
 const createPermission = computed(() =>
-  permissionStore.hasPermission("__plural__.store")
+  permissionStore.hasPermission("__camelName__.store")
 );
 const editPermission = computed(() =>
-  permissionStore.hasPermission("__plural__.edit")
+  permissionStore.hasPermission("__camelName__.edit")
 );
 const showPermission = computed(() =>
-  permissionStore.hasPermission("__plural__.show")
+  permissionStore.hasPermission("__camelName__.show")
 );
 const deletePermission = computed(() =>
-  permissionStore.hasPermission("__plural__.delete")
+  permissionStore.hasPermission("__camelName__.delete")
 );
 
 const tableColumns = [
@@ -87,7 +87,7 @@ const tableActions = [
         />
         <Button
           v-if="createPermission"
-          label="Add"
+          label="Add __PascalName__"
           icon="pi pi-plus"
           class="p-button-success border border-gray-300 p-2 shadow-md"
           @click="openNewForm"
