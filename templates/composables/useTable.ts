@@ -26,7 +26,7 @@ export function use__PascalName__Table() {
     fetchAll,
     deleteItem,
   } = useCrud<any>({
-    apiPath: "__PascalName___INDEX_API_PATHS.__PascalName__",
+    apiPath: __PascalName___INDEX_API_PATHS.__PascalName__,
   });
 
   const fetchAllWithParams = async (params: any) => {
@@ -89,14 +89,14 @@ export function use__PascalName__Table() {
   const confirmDeleteItem = (event: Event, item: __PascalName__) => {
     confirm.require({
       target: event.currentTarget as HTMLElement,
-      message: t("__plural__.confirmDelete"),
+      message: t("__localizedName__.confirmDelete"),
       icon: "pi pi-exclamation-triangle",
       acceptClass: "p-button-danger",
       accept: async () => {
         if (item.id) {
           try {
             await deleteItem(item.id);
-            showSuccess(t("common.success"), t("__plural__.deleted"));
+            showSuccess(t("common.success"), t("__localizedName__.deleted"));
             await fetchData(page.value, limit.value);
           } catch (e) {
             showError(error.value || "Something went wrong");
@@ -105,7 +105,7 @@ export function use__PascalName__Table() {
         }
       },
       reject: () => {
-        showInfo(t("common.info"), t("__plural__.notDeleted"));
+        showInfo(t("common.info"), t("__localizedName__.notDeleted"));
       },
     });
   };

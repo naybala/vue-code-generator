@@ -1,5 +1,5 @@
 <script setup lang="ts">
-import { use__PascalName__Form } from "@composables/__routeName__/use__PascalName__Form";
+import { use__PascalName__Form } from "@composables/__localizedName__/use__PascalName__Form";
 import Toast from "primevue/toast";
 import Card from "primevue/card";
 import NameField from "@components/common/NameField.vue";

@@ -5,8 +5,11 @@ export default {
     name: "အမည်",
     description: "အကြောင်းအရာ",
     actions: "အလုပ်များ",
+    add: "__PascalName__ ဖန်တီးခြင်း",
+    edit: "__PascalName__ အသစ်ဆောင်ခြင်း",
+    view: "__PascalName__ ကြည့်ခြင်း",
     confirmDelete: "__localizedName__ ဖျက်ရန် သေချာပါသလား?",
-    created: "__localizedName__ ဖန်တီ���ခြင်း အောင်မြင်ပါသည်!",
+    created: "__localizedName__ ဖန်တီးခြင်း အောင်မြင်ပါသည်!",
     updated: "__localizedName__ အသစ်ဆောင်ခြင်း အောင်မြင်ပါသည်!",
     deleted: "__localizedName__ ဖျက်ခြင်း အောင်မြင်ပါသည်!",
     notDeleted:
