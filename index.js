@@ -86,6 +86,7 @@ async function main() {
   const templatesDir = path.join(__dirname, "templates");
   const routesDir = path.join(projectRoot, "src", "router");
   const localeDir = path.join(projectRoot, "src", "locales");
+  const typesDir = path.join(projectRoot, "src", "types");
 
   // Check if feature already exists
   const alreadyExists =
@@ -170,6 +171,13 @@ async function main() {
   await generateFromTemplate(
     path.join(templatesDir, "locale", "en.js"),
     path.join(localeDir, `en/${localizedName}.js`),
+    replacements
+  );
+
+  // Generate Types
+  await generateFromTemplate(
+    path.join(templatesDir, "types", "type.ts"),
+    path.join(typesDir, `${camelName}.ts`),
     replacements
   );
 
