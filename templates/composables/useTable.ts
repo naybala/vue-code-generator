@@ -53,18 +53,6 @@ export function use__PascalName__Table() {
     }
   };
 
-  onMounted(async () => {
-    await fetchData();
-    console.log(
-      "Initial data loaded. Page:",
-      page.value,
-      "Limit:",
-      limit.value,
-      "Total:",
-      total.value
-    );
-  });
-
   //  Watch searchTerm for filtering
   watch(searchTerm, (newTerm) => {
     debouncedFetch({
