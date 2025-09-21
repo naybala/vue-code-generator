@@ -44,10 +44,7 @@ const deletePermission = computed(() =>
   permissionStore.hasPermission("__camelName__.delete")
 );
 
-const tableColumns = [
-  { label: "Name", field: "name" },
-  { label: "Description", field: "description" },
-];
+const tableColumns = [{ label: "Id", field: "id" }, __extraViewFields__];
 
 const tableActions = [
   {

@@ -4,11 +4,11 @@ import __PascalName__FormView from "@views/__localizedName__/__PascalName__FormV
 export const __camelName__Routes = [
   {
     path: "/__kebabName__",
-    name: "__routeName__",
+    name: "__localizedName__",
     component: __PascalName__ListView,
     meta: {
       requiresAuth: true,
-      permission: "__camelName__.index",
+      permission: "__localizedName__.index",
       sidebar: true,
       label: "sidebar.__localizedName__",
       icon: "pi pi-prime",
@@ -20,7 +20,7 @@ export const __camelName__Routes = [
     component: __PascalName__FormView,
     meta: {
       requiresAuth: true,
-      permission: "__camelName__.store",
+      permission: "__localizedName__.store",
     },
   },
   {
@@ -30,7 +30,7 @@ export const __camelName__Routes = [
     props: true,
     meta: {
       requiresAuth: true,
-      permission: "__camelName__.edit",
+      permission: "__localizedName__.edit",
     },
   },
   {
@@ -40,7 +40,7 @@ export const __camelName__Routes = [
     props: true,
     meta: {
       requiresAuth: true,
-      permission: "__camelName__.show",
+      permission: "__localizedName__.show",
     },
   },
 ];

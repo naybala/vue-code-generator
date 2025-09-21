@@ -34,7 +34,11 @@ function processTemplate(content, replacements) {
     .replace(/__plural__/g, replacements.pluralName)
     .replace(/__routeName__/g, replacements.routeName)
     .replace(/__kebabName__/g, replacements.kebabName)
-    .replace(/__localizedName__/g, replacements.localizedName);
+    .replace(/__localizedName__/g, replacements.localizedName)
+    .replace(/__extraFields__/g, replacements.extraFields || "")
+    .replace(/__extraRequiredFields__/g, replacements.extraRequiredFields || "")
+    .replace(/__extraViewFields__/g, replacements.extraViewFields || "")
+    .replace(/__formFields__/g, replacements.formFields || "");
 }
 
 async function generateFromTemplate(
@@ -51,14 +55,62 @@ function sleep(ms) {
   return new Promise((resolve) => setTimeout(resolve, ms));
 }
 
+const collectFields = async () => {
+  const fields = [];
+
+  let addMore = true;
+
+  while (addMore) {
+    const { fieldName, fieldType } = await inquirer.prompt([
+      {
+        type: "input",
+        name: "fieldName",
+        message: "Enter the field name (e.g. 'email'):",
+        validate: (input) => !!input || "Field name cannot be empty.",
+      },
+      {
+        type: "list",
+        name: "fieldType",
+        message: "Choose the field type:",
+        choices: ["string", "number", "boolean"],
+      },
+    ]);
+
+    fields.push({ name: fieldName, type: fieldType });
+
+    const { continueAdding } = await inquirer.prompt([
+      {
+        type: "confirm",
+        name: "continueAdding",
+        message: "Do you want to add another field?",
+      },
+    ]);
+    addMore = continueAdding;
+  }
+
+  return fields;
+};
+
 async function main() {
-  const { name } = await inquirer.prompt([
+  const { name, addMoreFields } = await inquirer.prompt([
     {
       type: "input",
       name: "name",
       message: "Name of the feature to generate (e.g. User):",
     },
+    {
+      type: "confirm",
+      name: "addMoreFields",
+      message: "Do you want to add more fields except id for this feature?",
+      default: false,
+    },
   ]);
+
+  let extraFields = [];
+
+  if (addMoreFields) {
+    extraFields = await collectFields();
+  }
 
   const pascalName = capitalize(name);
   const camelName = lowerFirst(name);
@@ -67,12 +119,37 @@ async function main() {
   const kebabName = toKebabCase(pluralName);
   const localizedName = pluralize(camelName);
 
-  // console.log(`Pascal name: "${pascalName}"`);
-  // console.log(`Camel name: "${camelName}"`);
-  // console.log(`Plural name: "${pluralName}"`);
-  // console.log(`Route name: "${routeName}"`);
-  // console.log(`Kebab name: "${kebabName}"`);
-  // console.log(`Localized name: "${localizedName}"`);
+  console.log(`Pascal name: "${pascalName}"`);
+  console.log(`Camel name: "${camelName}"`);
+  console.log(`Plural name: "${pluralName}"`);
+  console.log(`Route name: "${routeName}"`);
+  console.log(`Kebab name: "${kebabName}"`);
+  console.log(`Localized name: "${localizedName}"`);
+  console.log(`Extra fields: "${extraFields.map((f) => f.name).join(", ")}"`);
+
+  const extraFieldsString = extraFields
+    .map((field) => `  ${field.name}?: ${field.type};`)
+    .join("\n");
+
+  const extraRequiredFieldsString = extraFields
+    .map(
+      (field) =>
+        `  { field: "${field.name}", errorKey: "${field.name}Required" },`
+    )
+    .join("\n");
+
+  const extraViewFieldsString = extraFields
+    .map((field) => `  { label: "${field.name}", field: "${field.name}" },`)
+    .join("\n");
+
+  const formFieldsString = [
+    ...extraFields.map((field) => {
+      let defaultValue = '""';
+      if (field.type === "number") defaultValue = "0";
+      else if (field.type === "boolean") defaultValue = "false";
+      return `  ${field.name}: ${defaultValue},`;
+    }),
+  ].join("\n");
 
   const replacements = {
     pascalName,
@@ -81,6 +158,10 @@ async function main() {
     routeName,
     kebabName,
     localizedName,
+    extraFields: extraFieldsString,
+    extraRequiredFields: extraRequiredFieldsString,
+    extraViewFields: extraViewFieldsString,
+    formFields: formFieldsString,
   };
 
   const composablesDir = path.join(

@@ -30,9 +30,7 @@ export function use__PascalName__Form() {
   } = useCrud<any>({ apiPath: __PascalName___CREATE_API_PATHS.__PascalName__ });
 
   const form = ref<__PascalName__>({
-    name: "",
-    description: "",
-    // other fields
+    __formFields__
   });
 
   onMounted(async () => {
@@ -92,7 +90,7 @@ export function use__PascalName__Form() {
   };
 
   const cancel = () => {
-    router.push({ name: "__routeName__" });
+    router.push({ name: "__localizedName__" });
   };
 
   return {
