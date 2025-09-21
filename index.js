@@ -153,14 +153,6 @@ async function main() {
   ].join("\n");
 
   const formComponentsString = [
-    `  <NameField`,
-    `    id="nameRequired"`,
-    `    v-model="form.name"`,
-    `    :label="t('${kebabName}.name')"`,
-    `    :error="state.validationErrors.nameRequired"`,
-    `    :readonly="state.isShowMode"`,
-    `  />`,
-    "",
     ...extraFields.map((field) => {
       const labelKey = `${kebabName}.${field.name}`;
       const errorKey = `${field.name}Required`;
