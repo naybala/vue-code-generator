@@ -32,16 +32,16 @@ onMounted(() => fetchData());
 
 const permissionStore = usePermissionStore();
 const createPermission = computed(() =>
-  permissionStore.hasPermission("__camelName__.store")
+  permissionStore.hasPermission("__localizedName__.store")
 );
 const editPermission = computed(() =>
-  permissionStore.hasPermission("__camelName__.edit")
+  permissionStore.hasPermission("__localizedName__.edit")
 );
 const showPermission = computed(() =>
-  permissionStore.hasPermission("__camelName__.show")
+  permissionStore.hasPermission("__localizedName__.show")
 );
 const deletePermission = computed(() =>
-  permissionStore.hasPermission("__camelName__.delete")
+  permissionStore.hasPermission("__localizedName__.delete")
 );
 
 const tableColumns = [{ label: "Id", field: "id" }, __extraViewFields__];

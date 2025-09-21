@@ -33,20 +33,7 @@ useServerError(error);
           <Loader />
         </span>
         <form @submit.prevent="save" v-else>
-          <NameField
-            id="name"
-            v-model="form.name"
-            :label="t('__localizedName__.name')"
-            :error="state.validationErrors.name"
-            :readonly="state.isShowMode"
-          />
-
-          <Description
-            v-model="form.description"
-            :label="t('__localizedName__.description')"
-            :readonly="state.isShowMode"
-          />
-
+          __formComponents__
           <FormActions
             :onCancel="cancel"
             :saveLabel="t('common.save')"

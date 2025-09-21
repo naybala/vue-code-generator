@@ -38,7 +38,8 @@ function processTemplate(content, replacements) {
     .replace(/__extraFields__/g, replacements.extraFields || "")
     .replace(/__extraRequiredFields__/g, replacements.extraRequiredFields || "")
     .replace(/__extraViewFields__/g, replacements.extraViewFields || "")
-    .replace(/__formFields__/g, replacements.formFields || "");
+    .replace(/__formFields__/g, replacements.formFields || "")
+    .replace(/__formComponents__/g, replacements.formComponents || "");
 }
 
 async function generateFromTemplate(
@@ -151,6 +152,40 @@ async function main() {
     }),
   ].join("\n");
 
+  const formComponentsString = [
+    `  <NameField`,
+    `    id="nameRequired"`,
+    `    v-model="form.name"`,
+    `    :label="t('${kebabName}.name')"`,
+    `    :error="state.validationErrors.nameRequired"`,
+    `    :readonly="state.isShowMode"`,
+    `  />`,
+    "",
+    ...extraFields.map((field) => {
+      const labelKey = `${kebabName}.${field.name}`;
+      const errorKey = `${field.name}Required`;
+
+      // Choose the component based on type
+      let componentName = "NameField"; // default
+
+      if (field.type === "boolean") {
+        componentName = "NameField"; // your custom component
+      } else if (field.type === "number") {
+        componentName = "NameField"; // your custom component
+      } else if (field.name === "description") {
+        componentName = "NameField";
+      }
+
+      return `  <${componentName}
+    id="${errorKey}"
+    v-model="form.${field.name}"
+    :label="t('${labelKey}')"
+    :error="state.validationErrors.${errorKey}"
+    :readonly="state.isShowMode"
+  />`;
+    }),
+  ].join("\n");
+
   const replacements = {
     pascalName,
     camelName,
@@ -162,6 +197,7 @@ async function main() {
     extraRequiredFields: extraRequiredFieldsString,
     extraViewFields: extraViewFieldsString,
     formFields: formFieldsString,
+    formComponents: formComponentsString,
   };
 
   const composablesDir = path.join(
