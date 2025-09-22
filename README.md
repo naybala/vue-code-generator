@@ -7,9 +7,11 @@ This tool is designed to streamline the development process by scaffolding out c
 
 ## Features
 
-- Generate composables files (useForm.ts , useTable.ts , validateForm.ts)
+- Generate composables files (useForm.ts , useTable.ts , validateForm.ts , apiPaths.ts)
 - Generate views files (FormView.vue , ListView.vue)
 - Scaffold routes with authentication and validation middleware
+- including Localization (i18n)
+- including Dynamic Types
 
 ---
 
@@ -41,13 +43,21 @@ npm run make-core-ui-feature
 
 ```bash
 templates/
-│   ├── composables/
-│   │   ├── useForm.ts
-│   │   ├── useTable.ts
-│   │   └── validateForm.ts
-│   └── views/
-│       ├── FormView.vue
-│       ├── ListView.vue
-│_______________________
+├── types/
+│   └── newType.ts
+├── locales/
+│   └── en/
+│       └── newLang.js
+├── router/
+│   └── newRoutes.ts
+├── composables/
+│   ├── apiPaths.ts
+│   ├── useForm.ts
+│   ├── useTable.ts
+│   └── validateForm.ts
+└── views/
+    ├── FormView.vue
+    └── ListView.vue
+
 
 ```
